@@ -10,6 +10,8 @@ class Movement extends Model
     use CrudTrait;
 
     protected $guarded = [];
+    protected $appends = ['date'];
+    protected $dates = ['date'];
 
     public static function boot()
     {
@@ -24,6 +26,11 @@ class Movement extends Model
     public function door()
     {
         return $this->belongsTo(Door::class);
+    }
+
+    public function getDateAttribute()
+    {
+        return $this->created_at->format('Y-m-d');
     }
 
     public function employee()

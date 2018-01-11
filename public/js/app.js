@@ -1712,7 +1712,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         storeMovement: function storeMovement() {
             var _this = this;
 
-            // $('#' + this.employee_id).trigger('click');
+            console.log('change');
             axios.post('/movements', { 'employee_id': this.employee_id, 'type': this.employeeNewMovement }).then(function (employees) {
                 _this.$emit('movementWasStored');
             });
@@ -32933,10 +32933,7 @@ var render = function() {
         [
           _c(
             "div",
-            {
-              staticClass: "flex items-center justify-between px-2 py-2",
-              on: { click: _vm.storeMovement }
-            },
+            { staticClass: "flex items-center justify-between px-2 py-2" },
             [
               _c("div", { staticClass: "flex items-center" }, [
                 _c("img", {
@@ -32966,7 +32963,8 @@ var render = function() {
                       height: 40,
                       width: 100,
                       labels: { checked: "Out", unchecked: "In" }
-                    }
+                    },
+                    on: { change: _vm.storeMovement }
                   })
                 ],
                 1
