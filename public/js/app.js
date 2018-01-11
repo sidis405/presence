@@ -32887,7 +32887,7 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c(
     "div",
-    { staticClass: "container mx-auto flex flex-wrap" },
+    { staticClass: "flex flex-wrap" },
     _vm._l(_vm.employees, function(employee) {
       return _c("Employee", {
         key: employee.id,

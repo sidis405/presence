@@ -1,5 +1,5 @@
 <template>
-    <div class="container mx-auto flex flex-wrap">
+    <div class="flex flex-wrap">
             <Employee v-for="employee in employees" :key="employee.id" :employee="employee" @movementWasStored="fetchData()"></Employee>
     </div>
 </template>
