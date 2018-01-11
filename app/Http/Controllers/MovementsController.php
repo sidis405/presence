@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Movement;
+use App\Events\MovementWasMade;
 
 class MovementsController extends Controller
 {
@@ -25,8 +26,12 @@ class MovementsController extends Controller
         // $movement->door_id = session('door_id');
         $movement->save();
 
+        $movement = $movement->load('employee');
+
+        event(new MovementWasMade($movement));
+
         if (request()->wantsJson()) {
-            return $movement->load('employee');
+            return $movement;
         }
 
         return back();
