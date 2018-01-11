@@ -23,6 +23,10 @@ class Employee extends Model
             return gmdate("H:i", $day->values()->reverse()->chunk(2)->map(function ($move) {
                 $times = $move->pluck('created_at');
 
+                if (count($times) % 2 == 1 || count($times) == 0) {
+                    return 0;
+                }
+
                 $diff = $times[0]->diffInSeconds($times[1]);
 
                 return $diff;
