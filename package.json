@@ -18,5 +18,8 @@
         "lodash": "^4.17.4",
         "tailwindcss": "^0.4.0",
         "vue": "^2.5.7"
+    },
+    "dependencies": {
+        "vue-js-toggle-button": "^1.2.2"
     }
 }

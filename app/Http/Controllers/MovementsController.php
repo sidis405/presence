@@ -8,7 +8,7 @@ class MovementsController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('door-must-be-selected');
+        // $this->middleware('door-must-be-selected');
     }
 
     public function store()
@@ -21,11 +21,12 @@ class MovementsController extends Controller
         $movement = new Movement;
         $movement->employee_id = request('employee_id');
         $movement->type = request('type');
-        $movement->door_id = session('door_id');
+        $movement->door_id = 1;
+        // $movement->door_id = session('door_id');
         $movement->save();
 
         if (request()->wantsJson()) {
-            return $movement->load('employee', 'door');
+            return $movement->load('employee');
         }
 
         return back();
