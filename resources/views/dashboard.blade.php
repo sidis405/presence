@@ -3,7 +3,8 @@
 @section('content')
     <div class="container flex flex-wrap">
                 @foreach($employees as $employee)
-                    <div class="inline-block lg:w-1/2 md:w-full sm:w-full xs:w-full  w-full mx-0 my-0 w-1/2 bg-white border-t border-b sm:border-l sm:border-r sm:rounded shadow mb-4">
+                <div class="flex lg:w-1/2 md:w-full sm:w-full xs:w-full  w-full">
+                    <div class="inline-block mx-2 my-2 w-full bg-white border-t border-b sm:border-l sm:border-r sm:rounded shadow mb-4">
                         <div class="flex items-center justify-between px-4 py-4">
                             <div class="flex items-center">
                                 <img class="rounded-full inline-block h-24 w-24 " src="{{ $employee->avatar }}">
@@ -25,6 +26,7 @@
                             </div>
                         </div>
                     </div>
+                </div>
                 @endforeach
     </div>
 @stop
