@@ -21,13 +21,8 @@
 
 <script>
 
-import Button from './Button.vue';
-
     export default {
 
-        components: {
-                    Button
-                },
 
         props: ['employee'],
 
