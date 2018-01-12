@@ -20,6 +20,7 @@ class Presence extends Model
         static::created(function ($presence) {
             $presence->employee->last_presence_id = $presence->id;
             $presence->employee->save();
+
             $presence->timestamps = false;
             $presence->updated_at = null;
             $presence->save();

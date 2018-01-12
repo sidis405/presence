@@ -1691,8 +1691,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
     data: function data() {
         return {
+            'lastMovementInfo': '',
             'employee_id': this.employee.id
         };
+    },
+    mounted: function mounted() {
+        this.updateLastMovementInfo();
+        this.poll();
     },
 
 
@@ -1705,18 +1710,25 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         },
         employeeNewPresence: function employeeNewPresence() {
             return !this.isOut() ? 'out' : 'in';
-        },
-        lastMovementInfo: function lastMovementInfo() {
-            if (!this.employee.last_presence) {
-                return 'Not in yet';
-            }
-            var date = this.isOut() ? this.employee.last_presence.updated_at : this.employee.last_presence.created_at;
-
-            return 'Got ' + this.buttonType + " " + Vue.moment.utc(date, "YYYY-MM-DD HH:mm:ss").local().fromNow();
         }
     },
 
     methods: {
+        poll: function poll() {
+            var vm = this;
+            setTimeout(function () {
+                vm.updateLastMovementInfo();
+                vm.poll();
+            }, 60000);
+        },
+        updateLastMovementInfo: function updateLastMovementInfo() {
+            if (!this.employee.last_presence) {
+                this.lastMovementInfo = 'Not in yet';
+            } else {
+                var date = this.isOut() ? this.employee.last_presence.updated_at : this.employee.last_presence.created_at;
+                this.lastMovementInfo = 'Got ' + this.buttonType + " " + Vue.moment.utc(date, "YYYY-MM-DD HH:mm:ss").local().fromNow();
+            }
+        },
         isOut: function isOut() {
             return !this.employee.last_presence || this.employee.last_presence.status == 'out';
         },
@@ -1767,22 +1779,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
     mounted: function mounted() {
         this.fetchData();
-        this.poll();
     },
 
 
     methods: {
-        poll: function poll() {
-            var vm = this;
-            setTimeout(function () {
-                vm.fetchData();
-                vm.poll();
-            }, 60000);
-        },
         subscribe: function subscribe() {
             var _this = this;
 
-            var pusher = new Pusher('7287b3826137a9d8bab5', { cluster: 'eu' });
+            var pusher = new Pusher(window.pusherToken, { cluster: window.pusherRegion });
             pusher.subscribe('presence_dashboard');
             pusher.bind('App\\Events\\MovementWasMade', function (data) {
                 _this.fetchData();
@@ -65739,10 +65743,13 @@ if (token) {
 
 window.Pusher = __webpack_require__("./node_modules/pusher-js/dist/web/pusher.js");
 
+window.pusherToken = document.head.querySelector('meta[name="pusher-token"]').content;
+window.pusherRegion = document.head.querySelector('meta[name="pusher-region"]').content;
+
 window.Echo = new __WEBPACK_IMPORTED_MODULE_0_laravel_echo___default.a({
   broadcaster: 'pusher',
-  key: '7287b3826137a9d8bab5',
-  cluster: 'eu',
+  key: pusherToken,
+  cluster: pusherRegion,
   encrypted: true
 });
 

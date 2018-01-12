@@ -12,7 +12,6 @@
     </section>
 @endsection
 
-
 @section('content')
     <div class="row">
         <div class="col-md-3">
@@ -23,11 +22,11 @@
 
                 <div class="box-body">
                   <ul class="list-group">
-                  @forelse($in as $employeeIn)
-                    <li class="list-group-item">{{ $employeeIn }}</li>
-                  @empty
-                    <li class="list-group-item">There is no one here.</li>
-                  @endforelse
+                    @forelse($in as $employeeIn)
+                      <li class="list-group-item">{{ $employeeIn }}</li>
+                    @empty
+                      <li class="list-group-item">There is no one here.</li>
+                    @endforelse
                   </ul>
                 </div>
             </div>

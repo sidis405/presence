@@ -33,8 +33,14 @@ import Button from './Button.vue';
 
         data() {
             return {
+                'lastMovementInfo': '',
                 'employee_id' : this.employee.id
             }
+        },
+
+        mounted(){
+            this.updateLastMovementInfo();
+            this.poll();
         },
 
         computed: {
@@ -48,20 +54,31 @@ import Button from './Button.vue';
 
             employeeNewPresence(){
                 return (!this.isOut()) ? 'out' : 'in';
-            },
-
-            lastMovementInfo(){
-                if(!(this.employee.last_presence) ){
-                    return 'Not in yet';
-                }
-                var date = (this.isOut()) ? this.employee.last_presence.updated_at : this.employee.last_presence.created_at;
-
-                return 'Got ' + this.buttonType + " " + Vue.moment.utc(date, "YYYY-MM-DD HH:mm:ss").local().fromNow();
             }
 
         },
 
         methods: {
+
+            poll(){
+                var vm = this;
+                setTimeout(function(){
+                    vm.updateLastMovementInfo();
+                    vm.poll();
+                }, 60000);
+            },
+
+            updateLastMovementInfo(){
+                if(!(this.employee.last_presence) ){
+                    this.lastMovementInfo = 'Not in yet';
+                }else{
+                var date = (this.isOut()) ? this.employee.last_presence.updated_at : this.employee.last_presence.created_at;
+                this.lastMovementInfo = 'Got ' + this.buttonType + " " + Vue.moment.utc(date, "YYYY-MM-DD HH:mm:ss").local().fromNow();
+
+                }
+
+            },
+
             isOut(){
                 return !(this.employee.last_presence) || this.employee.last_presence.status == 'out';
             },

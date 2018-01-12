@@ -15,13 +15,9 @@ class Employee extends Model
 
     public static function storePresence($employee_id, $type)
     {
-        $employee = static::with('lastPresence')->find($employee_id);
+        $employee = static::find($employee_id);
 
-        if ($type == 'in') {
-            return $employee->getIn();
-        } else {
-            return $employee->getOut();
-        }
+        return ($type == 'in') ? $employee->getIn() : $employee->getOut();
     }
 
     public function getIn()
