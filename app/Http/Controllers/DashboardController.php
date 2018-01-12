@@ -8,9 +8,8 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        $employees = Employee::with('lastMovement')->orderBy('name', 'ASC')->get();
+        $employees = Employee::with('lastPresence')->orderBy('name', 'ASC')->get();
 
-        // return $employees;
 
         if (request()->wantsJson()) {
             return $employees;

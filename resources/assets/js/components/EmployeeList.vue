@@ -27,9 +27,19 @@
 
         mounted() {
             this.fetchData();
+            this.poll();
         },
 
         methods: {
+
+            poll(){
+                var vm = this;
+                setTimeout(function(){
+                    vm.fetchData();
+                    vm.poll();
+                }, 60000);
+            },
+
             subscribe () {
                   let pusher = new Pusher('7287b3826137a9d8bab5', { cluster: 'eu' })
                   pusher.subscribe('presence_dashboard')

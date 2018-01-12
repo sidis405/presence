@@ -13,7 +13,7 @@
     <!-- Styles -->
     <link href="{{ mix('/css/app.css') }}" rel="stylesheet">
 </head>
-<body class="bg-grey-darkest">
+<body class="bg-grey-darkest sans">
     <div id="app">
         {{-- <nav class="navbar navbar-default navbar-static-top">
             <div class="container">

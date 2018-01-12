@@ -14,7 +14,7 @@
           <!-- ================================================ -->
           <li><a href="{{ backpack_url('dashboard') }}"><i class="fa fa-dashboard"></i> <span>{{ trans('backpack::base.dashboard') }}</span></a></li>
           <li><a href="{{ url(config('backpack.base.route_prefix', 'admin').'/employees') }}"><i class="fa fa-user"></i> <span>Employees</span></a></li>
-          <li><a href="{{ url(config('backpack.base.route_prefix', 'admin').'/movements') }}"><i class="fa fa-external-link"></i> <span>Movements</span></a></li>
+          <li><a href="{{ url(config('backpack.base.route_prefix', 'admin').'/presences') }}"><i class="fa fa-external-link"></i> <span>Presences</span></a></li>
           <li><a href="{{ url(config('backpack.base.route_prefix', 'admin').'/doors') }}"><i class="fa fa-building"></i> <span>Doors</span></a></li>
 
 

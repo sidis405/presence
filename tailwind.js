@@ -194,6 +194,7 @@ module.exports = {
 
   fonts: {
     'sans': [
+      'Avenir Next',
       '-apple-system',
       'BlinkMacSystemFont',
       'Segoe UI',

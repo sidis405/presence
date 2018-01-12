@@ -8,7 +8,7 @@ use App\Http\Requests\MovementRequest as StoreRequest;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use App\Http\Requests\MovementRequest as UpdateRequest;
 
-class MovementCrudController extends CrudController
+class PresenceCrudController extends CrudController
 {
     public function setup()
     {
@@ -18,9 +18,9 @@ class MovementCrudController extends CrudController
         | BASIC CRUD INFORMATION
         |--------------------------------------------------------------------------
         */
-        $this->crud->setModel('App\Movement');
-        $this->crud->setRoute(config('backpack.base.route_prefix') . '/movements');
-        $this->crud->setEntityNameStrings('movement', 'movements');
+        $this->crud->setModel('App\Presence');
+        $this->crud->setRoute(config('backpack.base.route_prefix') . '/presences');
+        $this->crud->setEntityNameStrings('movement', 'presences');
 
         /*
         |--------------------------------------------------------------------------
@@ -50,19 +50,16 @@ class MovementCrudController extends CrudController
 
         $this->crud->addColumn([
            // 1-n relationship
-           'label' => "Time", // Table column heading
+           'label' => "Got In", // Table column heading
            'type' => "datetime",
            'name' => 'created_at'
         ]); // add a single column, at the end of the stack
 
         $this->crud->addColumn([
            // 1-n relationship
-           'label' => "Door", // Table column heading
-           'type' => "select",
-           'name' => 'door_id', // the column that contains the ID of that connected entity;
-           'entity' => 'door', // the method that defines the relationship in your Model
-           'attribute' => "name", // foreign key attribute that is shown to user
-           'model' => "App\Door", // foreign key model
+           'label' => "Got Out", // Table column heading
+           'type' => "datetime",
+           'name' => 'updated_at'
         ]); // add a single column, at the end of the stack
 
 
@@ -110,7 +107,7 @@ class MovementCrudController extends CrudController
         // ------ DATATABLE EXPORT BUTTONS
         // Show export to PDF, CSV, XLS and Print buttons on the table view.
         // Does not work well with AJAX datatables.
-        // $this->crud->enableExportButtons();
+        $this->crud->enableExportButtons();
 
         // ------ ADVANCED QUERIES
         // $this->crud->addClause('active');
@@ -134,23 +131,22 @@ class MovementCrudController extends CrudController
               'label'=> 'Filter By Employee',
               'placeholder' => 'Filter by employee'
             ],
-            url('admin/movements/ajax-employee-options'), // the ajax route
+            url('admin/presences/ajax-employee-options'), // the ajax route
             function ($value) {
                 $this->crud->addClause('where', 'employee_id', $value);
             }
         );
 
         $this->crud->addFilter(
-            [ // select2_ajax filter
-              'name' => 'door_id',
-              'type' => 'select2_ajax',
-              'label'=> 'Filter By Door',
-              'placeholder' => 'Filter by door'
-            ],
-            url('admin/movements/ajax-door-options'), // the ajax route
-            function ($value) {
-                $this->crud->addClause('where', 'door_id', $value);
-            }
+            [ // date filter
+                  'type' => 'date',
+                  'name' => 'created_at',
+                  'label'=> 'Date'
+                ],
+                false,
+                function ($value) { // if the filter is active, apply these constraints
+                    $this->crud->addClause('where', 'created_at', 'LIKE', '%' . $value . '%');
+                }
         );
     }
 

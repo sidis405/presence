@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateMovementsTable extends Migration
+class CreatePresencesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,10 @@ class CreateMovementsTable extends Migration
      */
     public function up()
     {
-        Schema::create('movements', function (Blueprint $table) {
+        Schema::create('presences', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('employee_id');
-            $table->integer('door_id');
-            $table->string('type')->default('out');
+            $table->tinyInteger('dirty_close')->default(0);
             $table->timestamps();
         });
     }
@@ -29,6 +28,6 @@ class CreateMovementsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('movements');
+        Schema::dropIfExists('presences');
     }
 }
