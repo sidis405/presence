@@ -42,5 +42,18 @@
                 <div class="box-body">{{ trans('backpack::base.logged_in') }}</div>
             </div>
         </div>
+        <div class="col-md-9">
+            <div class="box box-default">
+                <div class="box-header with-border">
+                    <div class="box-title">Some Chart</div>
+                </div>
+
+                <div class="box-body">
+                  {!! $chart->html() !!}
+                </div>
+            </div>
+        </div>
     </div>
+            {!! Charts::scripts() !!}
+        {!! $chart->script() !!}
 @endsection

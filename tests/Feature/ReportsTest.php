@@ -17,4 +17,15 @@ class ReportsTest extends TestCase
             $response = $this->get('/admin/login');
             $response->assertSee("E-Mail Address");
     }
+    /** @test */
+    public function admin_user_can_get_the_number_of_people_present()
+    {
+        
+    }
+    /** @test */
+    public function admin_user_can_get_the_number_of_people_not_present()
+    {
+        
+    }
+
 }
