@@ -81,7 +81,7 @@
                     <thead>
                       <th>Name</th>
                       @foreach(array_keys($reportDates) as $date)
-                        <th class="vertical">{{ date('d/m/Y', strtotime($date)) }}</th>
+                        <th class="vertical">{{ date('D d/m', strtotime($date)) }}</th>
                       @endforeach
                     </thead>
                     <tbody>
