@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Employee;
 use App\Presence;
 use Backpack\Base\app\Http\Controllers\Controller;
 
@@ -25,7 +26,11 @@ class AdminController extends Controller
     public function dashboard()
     {
         $this->data['title'] = trans('backpack::base.dashboard'); // set the page title
-        $this->data['in'] = Presence::whosIn();
+        $this->data['in'] = Employee::in()->get();
+        $this->data['out'] = Employee::out()->get();
+        $this->data['dirty'] = Presence::dirtyClose();
+
+        // return $this->data;
 
         return view('backpack::dashboard', $this->data);
     }

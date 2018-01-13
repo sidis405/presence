@@ -17,6 +17,7 @@ class CreatePresencesTable extends Migration
             $table->increments('id');
             $table->integer('employee_id');
             $table->tinyInteger('dirty_close')->default(0);
+            $table->tinyInteger('override')->default(0);
             $table->timestamps();
         });
     }

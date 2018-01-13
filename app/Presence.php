@@ -10,7 +10,7 @@ class Presence extends Model
     use CrudTrait;
 
     protected $guarded = [];
-    protected $appends = ['date', 'status', 'worked'];
+    protected $appends = ['date', 'status', 'worked', 'workedFormatted'];
     protected $dates = ['date'];
 
     public static function boot()
@@ -27,9 +27,25 @@ class Presence extends Model
         });
     }
 
+    public function setUpdatedAtAttribute($value)
+    {
+        $this->attributes['updated_at'] = \Date::parse($value);
+    }
+
+    public static function dirtyClose()
+    {
+        return static::where('dirty_close', 1)
+        ->where('override', 0)->with('employee')->latest()->get();
+    }
+
     public static function whosIn()
     {
         return static::whereNull('updated_at')->with('employee')->get()->pluck('employee.name');
+    }
+
+    public static function whosOut()
+    {
+        return static::where('updated_at', '!=', null)->with('employee')->get()->pluck('employee.name');
     }
 
     public function getStatusAttribute()
@@ -40,6 +56,11 @@ class Presence extends Model
     public function getWorkedAttribute()
     {
         return (is_null($this->updated_at)) ? 0 : $this->updated_at->diffInSeconds($this->created_at);
+    }
+
+    public function getWorkedFormattedAttribute()
+    {
+        return ($this->worked) ? date('H:i', $this->worked) : null;
     }
 
     public function getDateAttribute()

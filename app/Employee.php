@@ -13,6 +13,20 @@ class Employee extends Model
     protected $guarded = [];
     protected $appends = ['workedHours'];
 
+    public function scopeOut($query)
+    {
+        return $query->whereHas('lastPresence', function ($innerQuery) {
+            return $innerQuery->where('updated_at', '!=', null);
+        })->orWhereDoesntHave('lastPresence');
+    }
+
+    public function scopeIn($query)
+    {
+        return $query->whereHas('lastPresence', function ($innerQuery) {
+            return $innerQuery->whereNull('updated_at');
+        });
+    }
+
     public static function storePresence($employee_id, $type)
     {
         $employee = static::find($employee_id);
