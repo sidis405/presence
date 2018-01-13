@@ -47,9 +47,12 @@ import Echo from 'laravel-echo'
 
 window.Pusher = require('pusher-js');
 
+window.pusherToken = document.head.querySelector('meta[name="pusher-token"]').content;
+window.pusherRegion = document.head.querySelector('meta[name="pusher-region"]').content;
+
 window.Echo = new Echo({
     broadcaster: 'pusher',
-    key: '7287b3826137a9d8bab5',
-    cluster: 'eu',
+    key: pusherToken,
+    cluster: pusherRegion,
     encrypted: true
 });

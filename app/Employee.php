@@ -13,15 +13,25 @@ class Employee extends Model
     protected $guarded = [];
     protected $appends = ['workedHours'];
 
+    public function scopeOut($query)
+    {
+        return $query->whereHas('lastPresence', function ($innerQuery) {
+            return $innerQuery->where('updated_at', '!=', null);
+        })->orWhereDoesntHave('lastPresence');
+    }
+
+    public function scopeIn($query)
+    {
+        return $query->whereHas('lastPresence', function ($innerQuery) {
+            return $innerQuery->whereNull('updated_at');
+        });
+    }
+
     public static function storePresence($employee_id, $type)
     {
-        $employee = static::with('lastPresence')->find($employee_id);
+        $employee = static::find($employee_id);
 
-        if ($type == 'in') {
-            return $employee->getIn();
-        } else {
-            return $employee->getOut();
-        }
+        return ($type == 'in') ? $employee->getIn() : $employee->getOut();
     }
 
     public function getIn()
@@ -36,12 +46,12 @@ class Employee extends Model
 
     public function presences()
     {
-        return $this->hasMany(Presence::class);
+        return $this->hasMany(Presence::class)->oldest();
     }
 
     public function getWorkedHoursAttribute()
     {
-        return $this->presences()->get()->groupBy('date')->map(function ($day) {
+        return $this->presences->groupBy('date')->map(function ($day) {
             return gmdate("H:i", $day->pluck('worked')->sum());
         });
     }

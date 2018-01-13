@@ -10,7 +10,6 @@ class DashboardController extends Controller
     {
         $employees = Employee::with('lastPresence')->orderBy('name', 'ASC')->get();
 
-
         if (request()->wantsJson()) {
             return $employees;
         }

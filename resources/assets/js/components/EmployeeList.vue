@@ -27,21 +27,11 @@
 
         mounted() {
             this.fetchData();
-            this.poll();
         },
 
         methods: {
-
-            poll(){
-                var vm = this;
-                setTimeout(function(){
-                    vm.fetchData();
-                    vm.poll();
-                }, 60000);
-            },
-
             subscribe () {
-                  let pusher = new Pusher('7287b3826137a9d8bab5', { cluster: 'eu' })
+                  let pusher = new Pusher(window.pusherToken, { cluster: window.pusherRegion })
                   pusher.subscribe('presence_dashboard')
                   pusher.bind('App\\Events\\MovementWasMade', data => {
                     this.fetchData()

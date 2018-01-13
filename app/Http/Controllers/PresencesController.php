@@ -14,7 +14,10 @@ class PresencesController extends Controller
             'type' => 'required|string',
         ]);
 
-        $presence = Employee::storePresence(request('employee_id'), request('type'));
+        Employee::storePresence(
+            request('employee_id'),
+            request('type')
+        );
 
         event(new MovementWasMade());
     }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Employee;
 use App\Presence;
+use Carbon\Carbon;
 use Backpack\Base\app\Http\Controllers\Controller;
 use ConsoleTVs\Charts\Facades\Charts;
 
@@ -26,11 +27,16 @@ class AdminController extends Controller
      */
     public function dashboard()
     {
+        $this->data['title'] = trans('backpack::base.dashboard'); // set the page title
+        $this->data['in'] = Employee::in()->get();
+        $this->data['out'] = Employee::out()->get();
+        $this->data['dirty'] = Presence::dirtyClose();
 
-        // $employees = Employee::all();
 
-        // return $employees;
+        $year = Carbon::now()->format('Y');
+        $week = Carbon::now()->format('W');
 
+<<<<<<< HEAD
         $this->data['title'] = trans('backpack::base.dashboard'); // set the page title
         $this->data['in'] = Presence::whosIn();
         
@@ -50,6 +56,31 @@ class AdminController extends Controller
             // Setup what the values mean
             ->labels(['One', 'Two', 'Three']);
         // dd($this->data);
+=======
+        $date = Carbon::now();
+        $date->setISODate($year, $week);
+
+        $startDate = $date->startOfWeek()->toDateString();
+        $endDate = $date->endOfWeek()->toDateString();
+
+        $dateRange = $this->getDateRange($startDate, $endDate);
+
+        // return $dateRange;
+
+        $employees = collect(Employee::with(['presences' => function ($query) use ($startDate, $endDate) {
+            return $query->whereBetween('created_at', [$startDate, $endDate])->get();
+        }])->get())->map(function ($employee) use ($dateRange) {
+            $employee = $employee->toArray();
+
+            $employee['workedHours'] = array_merge($dateRange, $employee['workedHours']);
+
+            unset($employee['presences']);
+            return $employee;
+        });
+
+        $this->data['reportDates'] = $dateRange;
+        $this->data['reportData'] = $employees;
+>>>>>>> 354f5de96d0c2e07dcb95497f42484d338ca7e67
 
         return view('backpack::dashboard', $this->data, [ 'chart' => $chart]);
     }
@@ -63,5 +94,23 @@ class AdminController extends Controller
     {
         // The '/admin' route is not to be used as a page, because it breaks the menu's active state.
         return redirect(config('backpack.base.route_prefix').'/dashboard');
+    }
+
+    protected function getDateRange($startDate, $endDate)
+    {
+        $begin = new \DateTime($startDate);
+        $end = new \DateTime($endDate);
+        $end = $end->modify('+1 day');
+
+        $interval = new \DateInterval('P1D');
+        $daterange = new \DatePeriod($begin, $interval, $end);
+
+        $dates = [];
+
+        foreach ($daterange as $date) {
+            $dates[$date->format("Y-m-d")] = '00:00';
+        }
+
+        return $dates;
     }
 }
