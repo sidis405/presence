@@ -14,7 +14,7 @@
 
 @section('content')
     <div class="row">
-        <div class="col-md-3">
+        <div class="col-md-2">
             <div class="box box-default">
                 <div class="box-header with-border">
                     <div class="box-title">Who's In ({{ count($in) }})</div>
@@ -48,7 +48,7 @@
             </div>
         </div>
 
-        <div class="col-md-9">
+        <div class="col-md-10">
 
           @if(count($dirty))
             <div class="box box-default">
@@ -73,10 +73,29 @@
                 @endif
             <div class="box box-default">
                 <div class="box-header with-border">
-                    <div class="box-title">{{ trans('backpack::base.login_status') }}</div>
+                    <div class="box-title">Current Week</div>
                 </div>
 
-                <div class="box-body">{{ trans('backpack::base.logged_in') }}</div>
+                <div class="box-body">
+                  <table class="table table-responsive table-bordered table-striped">
+                    <thead>
+                      <th>Name</th>
+                      @foreach(array_keys($reportDates) as $date)
+                        <th class="vertical">{{ date('d/m/Y', strtotime($date)) }}</th>
+                      @endforeach
+                    </thead>
+                    <tbody>
+                      @foreach($reportData as $employee)
+                        <tr>
+                          <td>{{$employee['name']}}</td>
+                          @foreach($employee['workedHours'] as $date => $hours)
+                            <td>{{ ($hours != '00:00') ? $hours : '' }}</td>
+                          @endforeach
+                        </tr>
+                      @endforeach
+                    </tbody>
+                  </table>
+                </div>
             </div>
         </div>
     </div>

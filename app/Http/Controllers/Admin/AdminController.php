@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Employee;
 use App\Presence;
+use Carbon\Carbon;
 use Backpack\Base\app\Http\Controllers\Controller;
 
 class AdminController extends Controller
@@ -30,7 +31,33 @@ class AdminController extends Controller
         $this->data['out'] = Employee::out()->get();
         $this->data['dirty'] = Presence::dirtyClose();
 
-        // return $this->data;
+
+        $year = Carbon::now()->format('Y');
+        $week = Carbon::now()->format('W');
+
+        $date = Carbon::now();
+        $date->setISODate($year, $week);
+
+        $startDate = $date->startOfWeek()->toDateString();
+        $endDate = $date->endOfWeek()->toDateString();
+
+        $dateRange = $this->getDateRange($startDate, $endDate);
+
+        // return $dateRange;
+
+        $employees = collect(Employee::with(['presences' => function ($query) use ($startDate, $endDate) {
+            return $query->whereBetween('created_at', [$startDate, $endDate])->get();
+        }])->get())->map(function ($employee) use ($dateRange) {
+            $employee = $employee->toArray();
+
+            $employee['workedHours'] = array_merge($dateRange, $employee['workedHours']);
+
+            unset($employee['presences']);
+            return $employee;
+        });
+
+        $this->data['reportDates'] = $dateRange;
+        $this->data['reportData'] = $employees;
 
         return view('backpack::dashboard', $this->data);
     }
@@ -44,5 +71,23 @@ class AdminController extends Controller
     {
         // The '/admin' route is not to be used as a page, because it breaks the menu's active state.
         return redirect(config('backpack.base.route_prefix').'/dashboard');
+    }
+
+    protected function getDateRange($startDate, $endDate)
+    {
+        $begin = new \DateTime($startDate);
+        $end = new \DateTime($endDate);
+        $end = $end->modify('+1 day');
+
+        $interval = new \DateInterval('P1D');
+        $daterange = new \DatePeriod($begin, $interval, $end);
+
+        $dates = [];
+
+        foreach ($daterange as $date) {
+            $dates[$date->format("Y-m-d")] = '00:00';
+        }
+
+        return $dates;
     }
 }

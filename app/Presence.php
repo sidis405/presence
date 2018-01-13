@@ -29,7 +29,7 @@ class Presence extends Model
 
     public function setUpdatedAtAttribute($value)
     {
-        $this->attributes['updated_at'] = \Date::parse($value);
+        $this->attributes['updated_at'] = ($value) ?  \Date::parse($value) : null;
     }
 
     public static function dirtyClose()
@@ -37,6 +37,7 @@ class Presence extends Model
         return static::where('dirty_close', 1)
         ->where('override', 0)->with('employee')->latest()->get();
     }
+
 
     public static function whosIn()
     {

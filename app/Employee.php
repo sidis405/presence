@@ -46,12 +46,12 @@ class Employee extends Model
 
     public function presences()
     {
-        return $this->hasMany(Presence::class);
+        return $this->hasMany(Presence::class)->oldest();
     }
 
     public function getWorkedHoursAttribute()
     {
-        return $this->presences()->get()->groupBy('date')->map(function ($day) {
+        return $this->presences->groupBy('date')->map(function ($day) {
             return gmdate("H:i", $day->pluck('worked')->sum());
         });
     }
